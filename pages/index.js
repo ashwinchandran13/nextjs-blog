@@ -1,19 +1,43 @@
 import Head from 'next/head'
 import Layout, { siteTitle } from '../components/layout'
-import utilStyles from '../styles/utils.modules.css'
+import utilStyles from '../styles/utils.module.css'
+import { getSortedPostsData } from '../lib/posts'
 
-export default function Home() {
+export async function getStaticProps() {
+  const allPostsData = getSortedPostsData()
+  return {
+    props: {
+      allPostsData
+    }
+  }
+}
+
+export default function Home({ allPostsData }) {
   return (
     <Layout home>
       <Head>
         <title>{siteTitle}</title>
       </Head>
-      <section class={utilStyles.headingMd}>
+      <section className={utilStyles.headingMd}>
         <p>Hi my name is Ashwin Chandran, a full stack developer</p>
         <p>
-          Visit my portfolio website where I have show cased my works
-          <a href="https://ashwinchandran13.github.io/portfolio-page/#contact">My Portfolio page</a>
+          Visit my portfolio website where I have show cased my works{' '}
+          <a href="https://ashwinchandran13.github.io/portfolio-page/#contact"> My Portfolio page</a>
         </p>
+      </section>
+      <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
+        <h2 className={utilStyles.headingLg}>Blog</h2>
+        <ul className={utilStyles.list}>
+          {allPostsData.map(({ id, date, title }) => (
+            <li className={utilStyles.listItem} key={id}>
+              {title}
+              <br />
+              {id}
+              <br/>
+              {date}
+            </li>
+          ))}
+        </ul>
       </section>
     </Layout>
   )
